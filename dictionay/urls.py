@@ -23,4 +23,5 @@ urlpatterns = [
     path('api/', include("orthographic_dict.urls")),
     path('api/user/register/', views.UserRegisterView.as_view(), name='user-register'),
     path('api/user/login/', views.UserLoginView.as_view(), name='user-login'),
+    path('api/user/logout/', views.LogoutView.as_view(), name='logout')
 ]

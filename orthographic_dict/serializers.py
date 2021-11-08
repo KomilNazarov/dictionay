@@ -22,7 +22,6 @@ class RotatsiyaSerializer(serializers.ModelSerializer):
     _type = serializers.CharField(max_length=3, read_only=True)
 
 
-
 class UserRegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User

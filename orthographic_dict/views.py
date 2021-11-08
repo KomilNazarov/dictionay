@@ -1,7 +1,7 @@
 from collections import OrderedDict
 
 from django.contrib.auth import get_user_model
-from rest_framework import views, generics, response, permissions, filters, pagination
+from rest_framework import views, generics, response, permissions, filters, pagination, status
 
 from . import serializers
 from .models import Word, Category
@@ -42,7 +42,6 @@ class WordRetrieveAPIViews(generics.RetrieveAPIView):
     pagination_class = WordPagination
     filter_backends = [filters.SearchFilter]
     search_fields = ['title']
-    lookup_field = 'id'
 
 
 class WordDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
@@ -70,3 +69,9 @@ class UserLoginView(views.APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return response.Response(serializer.data)
+
+
+class LogoutView(views.APIView):
+    def get(self, request):
+        request.user.auth_token.delete()
+        return response.Response(status=status.HTTP_200_OK)
