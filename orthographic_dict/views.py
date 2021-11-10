@@ -31,20 +31,17 @@ class WordPagination(pagination.PageNumberPagination):
 
 class WordAPIViews(views.APIView):
     def get(self, request):
-        serializer = serializers.WordSerializer(instance=request.user)
-        return Word.objects.count()
+        quantity = Word.objects.count()
+        return response.Response({'number': quantity})
 
 
-class WordRetrieveAPIViews(generics.RetrieveAPIView):
+class WordListAPIViews(generics.ListAPIView):
     permission_classes = [permissions.AllowAny]
     serializer_class = serializers.WordSerializer
     queryset = Word.objects.all()
     pagination_class = WordPagination
     filter_backends = [filters.SearchFilter]
     search_fields = ['title']
-
-    def word_count(self):
-        return Word.objects.count()
 
 
 class WordDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
@@ -55,16 +52,20 @@ class WordDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class RotationApiView(generics.CreateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
     queryset = Rotatsiya.objects.all()
     serializer_class = serializers.RotatsiyaSerializer
 
 
-class UserRetriveAPIViews(generics.RetrieveAPIView):
+class UserListAPIViews(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = serializers.UserSerializer
 
-    def count_user(self):
-        return User.objects.count()
+
+class UserNUMAPIViews(views.APIView):
+    def get(self, request):
+        quantity = User.objects.count()
+        return response.Response({'user_number': quantity})
 
 
 class UserRegisterView(views.APIView):

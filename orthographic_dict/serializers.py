@@ -14,7 +14,7 @@ class CategorySerializer(serializers.ModelSerializer):
 class WordSerializer(serializers.ModelSerializer):
     class Meta:
         model = Word
-        fields = ("title", "post")
+        fields = ("id", "title", "post", )
 
 
 class RotatsiyaSerializer(serializers.ModelSerializer):
