@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import views, generics, response, permissions, filters, pagination, status
 
 from . import serializers
-from .models import Word, Category
+from .models import Word, Category, Rotatsiya
 
 User = get_user_model()
 
@@ -29,10 +29,10 @@ class WordPagination(pagination.PageNumberPagination):
         ]))
 
 
-# class WordAPIViews(views.APIView):
-#     def get(self, request):
-#         serializer = WordSerializer(instance=request.user)
-#         return response.Response(data=serializer.data)
+class WordAPIViews(views.APIView):
+    def get(self, request):
+        serializer = serializers.WordSerializer(instance=request.user)
+        return Word.objects.count()
 
 
 class WordRetrieveAPIViews(generics.RetrieveAPIView):
@@ -43,12 +43,28 @@ class WordRetrieveAPIViews(generics.RetrieveAPIView):
     filter_backends = [filters.SearchFilter]
     search_fields = ['title']
 
+    def word_count(self):
+        return Word.objects.count()
+
 
 class WordDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, permissions.IsAdminUser]
     serializer_class = serializers.WordSerializer
     queryset = Word.objects.all()
     lookup_field = 'id'
+
+
+class RotationApiView(generics.CreateAPIView):
+    queryset = Rotatsiya.objects.all()
+    serializer_class = serializers.RotatsiyaSerializer
+
+
+class UserRetriveAPIViews(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = serializers.UserSerializer
+
+    def count_user(self):
+        return User.objects.count()
 
 
 class UserRegisterView(views.APIView):

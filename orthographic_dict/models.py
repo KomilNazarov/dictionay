@@ -1,5 +1,5 @@
+from django.contrib.auth import get_user_model
 
-from django.contrib.auth.models import AbstractUser
 
 from django.db import models
 
@@ -18,13 +18,13 @@ class Word(models.Model):
         ('Hh', 'Hh'), ('Ii', 'Ii'), ('Jj', 'Jj'), ('Kk', 'Kk'), ('Ll', 'Ll'), ('Mm', 'Mm'),
         ('Nn', 'Nn'), ('Oo', 'Oo'), ('Pp', 'Pp'), ('Qq', 'Qq'), ('Rr', 'Rr'), ('Ss', 'Ss'),
         ('Tt', 'Tt'), ('Uu', 'Uu'), ('Vv', 'Vv'), ('Xx', 'Xx'), ('Yy', 'Yy'), ('Zz', 'Zz'),
-        ('O\n`o\n`', 'O\n`o\n`'), ('G\n`g\n`', 'G\n`g\n`'), ('Shsh', 'Shsh'), ('Chch', 'Chch'), ('Ngng', 'Ngng')
+        ('O\'`o\'`', 'O\'`o\'`'), ('G\'`g\'`', 'G\'`g\'`'), ('Shsh', 'Shsh'), ('Chch', 'Chch'), ('Ngng', 'Ngng')
 
     ]
 
     _type = models.CharField(choices=LETTERS, max_length=100,  verbose_name='harfni tanlang')
     title = models.CharField(max_length=255, verbose_name='So\n`z ')
-    post = models.TextField(verbose_name='So\n`zning manosi')
+    post = models.TextField(verbose_name='So\'`zning manosi')
     slug = models.SlugField()
 
     class Meta:
@@ -42,6 +42,9 @@ class Rotatsiya(models.Model):
         (BILMAYMAN, BILMAYMAN),
     )
 
-    word = models.OneToOneField(Word, on_delete=models.CASCADE)
-    _type = models.CharField(choices=TYPE_CHOICES, max_length=15)
+    word = models.ForeignKey(Word, on_delete=models.CASCADE)
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    _type = models.CharField(choices=TYPE_CHOICES, default=BILMAYMAN, max_length=20)
 
+    class Meta:
+        unique_together = ['user', 'word']

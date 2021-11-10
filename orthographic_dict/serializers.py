@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
-from .models import Word, Category
+from .models import Word, Category, Rotatsiya
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 
@@ -18,8 +18,26 @@ class WordSerializer(serializers.ModelSerializer):
 
 
 class RotatsiyaSerializer(serializers.ModelSerializer):
-    word_id = serializers.IntegerField(read_only=True)
-    _type = serializers.CharField(max_length=3, read_only=True)
+    class Meta:
+        model = Rotatsiya
+        fields = ['word', '_type', 'user']
+        extra_kwargs = {'user': {'required': False, 'read_only': True}}
+
+    def create(self, validated_data):
+        print(validated_data)
+        user = self.context['request'].user
+        word = validated_data['word']
+        validated_data['user'] = user
+        rotation = Rotatsiya.objects.filter(user=user, word=word)
+        if rotation.count():
+            raise serializers.ValidationError('Bu foydalanuvchi bu so\'z haqida fikr bildirgan')
+        return Rotatsiya.objects.create(**validated_data)
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', "username"]
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
