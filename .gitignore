@@ -110,7 +110,7 @@ uploads/
 *.pyc
 *.db
 *.pid
-
+*.env
 # Ignore Django Migrations in Development if you are working on team
 
 # Only for Development only
